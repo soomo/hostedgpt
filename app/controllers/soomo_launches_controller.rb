@@ -70,7 +70,7 @@ class SoomoLaunchesController < ApplicationController
       person.user.assistants.create!(
         name: assistant_name,
         description: "#{course_id}:#{element_family_id}:#{Time.now.utc.iso8601}",
-        instructions: INSTRUCTIONS,
+        instructions: claims['system_prompt'] || INSTRUCTIONS,
         language_model: LanguageModel.find_by(name: model_name)
       )
     end
