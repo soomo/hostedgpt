@@ -110,7 +110,7 @@ class AIBackend::OpenAI < AIBackend
 
   def system_message(content)
     [{
-      role: "system",
+      role: @assistant.language_model.supports_system_message? ? "system" : "user",
       content:,
     }]
   end
