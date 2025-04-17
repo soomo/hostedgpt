@@ -25,22 +25,23 @@ class SoomoLaunchesController < ApplicationController
       logger.warn "JWT invalid: #{jwt}"
       return head(:unauthorized)
     end
-    email = "#{claims['sub']}@hostedgpt.soomo"
+    auth_uid = "#{claims['sub']}+v2"
+    email = "#{auth_uid}@hostedgpt.soomo"
     course_id, element_family_id = claims['cid'], claims['fid']
 
-    unless credential = HttpHeaderCredential.find_by(auth_uid: claims['sub'])
+    unless credential = HttpHeaderCredential.find_by(auth_uid: auth_uid)
       begin
         Person.transaction do
           user = User.create!(name: "Student User")
           person = Person.create!(personable: user, email: email)
-          HttpHeaderCredential.create!(user: user, external_id: claims['sub'])
+          HttpHeaderCredential.create!(user: user, external_id: auth_uid)
         end
       rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
         # either the Person or HttpHeaderCredential could not be created,
         # presumably because another thread just created them due to a
         # parallel launch request.
       end
-      credential = HttpHeaderCredential.find_by!(auth_uid: claims['sub'])
+      credential = HttpHeaderCredential.find_by!(auth_uid: auth_uid)
     end
     person = credential.user.person
 
@@ -55,8 +56,8 @@ class SoomoLaunchesController < ApplicationController
     client = person.clients.api.authenticated.last
 
     assistants = [
-      ["o1", "o1"],
-      ["o1-mini", "o1-mini"],
+      ["o1", "o1-2024-12-17"],
+      ["o1-mini", "o1-mini-2024-09-12"],
       ["GPT-4o", "gpt-4o"],
       ["GPT-4o mini", "gpt-4o-mini"],
       ["GPT-3.5", "gpt-3.5-turbo"],
@@ -64,19 +65,27 @@ class SoomoLaunchesController < ApplicationController
       ["Claude 3.5 Sonnet", "claude-3-5-sonnet-20240620"],
       ["Claude 3.5 Sonnet", "claude-3-5-sonnet-20241022"],
       ["Claude 3.7 Sonnet", "claude-3-7-sonnet-20250219"]
-    ].map do |(assistant_name, model_name)|
+    ].map do |(assistant_name, language_model_api_name)|
+      language_model = person.user.language_models.find_by_api_name(language_model_api_name)
       person.user.assistants.create!(
         name: assistant_name,
         description: "#{course_id}:#{element_family_id}:#{Time.now.utc.iso8601}",
         instructions: claims['system_prompt'] || INSTRUCTIONS,
-        language_model: LanguageModel.find_by(name: model_name)
+        language_model: language_model
       )
     end
 
     render json: {
       api_key: client.bearer_token,
-      assistants: assistants.map do |a|
-        a.as_json(include: :language_model)
+      assistants: assistants.map do |assistant|
+        {
+          id: assistant.id,
+          name: assistant.name,
+          language_model: {
+            name: assistant.language_model.api_name,
+            api_name: assistant.language_model.api_name
+          }
+        }
       end
     }
   end
