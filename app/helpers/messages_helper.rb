@@ -67,12 +67,16 @@ module MessagesHelper
       inline-block
       ml-1
       #{!thinking && 'hidden'}
-    |) +
+    |,
+      role: "img",
+      aria: { label: "Output in progress" }) +
     span_tag(" ...", class: (message.content_text.blank? || message.not_cancelled?) && "hidden") +
     icon("stop",
       variant: :solid,
       size: 17,
       title: "Stopped",
+      role: "img",
+      aria: { label: "Stopped" },
       tooltip: :top,
       data: { role: "cancelled" },
       class: "inline-block pl-1 #{message.not_cancelled? && 'hidden'}"

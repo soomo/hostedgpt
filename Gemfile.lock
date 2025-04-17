@@ -344,6 +344,7 @@ GEM
     reline (0.5.10)
       io-console (~> 0.5)
     rexml (3.3.9)
+    rollbar (3.6.2)
     rubocop (1.57.2)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
@@ -520,6 +521,7 @@ DEPENDENCIES
   rails_heroicon (~> 2.2.0)
   redcarpet (~> 3.6.0)
   redis (>= 4.0.1)
+  rollbar
   rubocop-capybara
   rubocop-minitest
   rubocop-rails

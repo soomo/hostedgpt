@@ -65,6 +65,7 @@ services:
       - EMAIL_FROM
       - EMAIL_HOST
       - POSTMARK_SERVER_API_TOKEN
+      - HOSTEDGPT_JWT_SECRET_KEY
     ports: ["3000:3000"]
     volumes:
       - .:/rails
