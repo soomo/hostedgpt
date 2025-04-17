@@ -1,6 +1,6 @@
 class Assistant < ApplicationRecord
   include Export
-  include Slug
+  include Slug if self.columns.find { |col| col.name == "slug" }
 
   MAX_LIST_DISPLAY = 5
 
