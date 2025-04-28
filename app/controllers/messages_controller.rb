@@ -2,6 +2,8 @@ class MessagesController < ApplicationController
   include ActiveStorage::SetCurrent
   include HasConversationStarter
 
+  skip_before_action :verify_authenticity_token, only: [:create, :update]
+
   before_action :set_version,               only: [:index, :update]
   before_action :set_conversation,          only: [:index]
   before_action :set_assistant,             only: [:index, :new, :edit, :create]
@@ -42,13 +44,33 @@ class MessagesController < ApplicationController
     if @message.save
       after_create_assistant_reply = @message.conversation.latest_message_for_version(@message.version)
       GetNextAIMessageJob.perform_later(Current.user.id, after_create_assistant_reply.id, @assistant.id)
-      redirect_to conversation_messages_path(@message.conversation, version: @message.version), status: :see_other
+
+      respond_to do |format|
+        format.html {
+          redirect_to conversation_messages_path(@message.conversation, version: @message.version), status: :see_other
+        }
+        format.json {
+          render json: {
+            message: @message,
+            signed_stream_name: Turbo.signed_stream_verifier.generate(@message.conversation.to_gid_param)
+          }
+        }
+      end
     else
       # what's the right flow for a failed message create? it's not this, but hacking it so tests pass until we have a plan
       set_nav_assistants
       @new_message = @assistant.messages.new
 
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.html {
+          render :new, status: :unprocessable_entity
+        }
+        format.json {
+          render json: {
+            errors: @message.errors
+          }, status: :unprocessable_entity
+        }
+      end
     end
   end
 

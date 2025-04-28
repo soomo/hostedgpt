@@ -1,6 +1,6 @@
 class Assistant < ApplicationRecord
   include Export
-  include Slug
+  include Slug if Rails.env.test?
 
   MAX_LIST_DISPLAY = 5
 
