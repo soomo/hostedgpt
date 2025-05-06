@@ -9,7 +9,7 @@ class Conversation < ApplicationRecord
   has_many :steps, dependent: :destroy
   belongs_to :last_assistant_message, class_name: "Message", inverse_of: :conversation, optional: true
 
-  after_touch :set_title_async, if: -> { title.blank? && messages.count >= 2 }
+  # after_touch :set_title_async, if: -> { title.blank? && messages.count >= 2 }
 
   scope :ordered, -> { order(updated_at: :desc) }
 
