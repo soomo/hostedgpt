@@ -56,15 +56,15 @@ class SoomoLaunchesController < ApplicationController
     client = person.clients.api.authenticated.last
 
     assistants = [
-      ["o1", "o1-2024-12-17"],
-      ["o1-mini", "o1-mini-2024-09-12"],
       ["GPT-4o", "gpt-4o"],
       ["GPT-4o mini", "gpt-4o-mini"],
       ["GPT-3.5", "gpt-3.5-turbo"],
       ["Claude 3 Opus", "claude-3-opus-20240229"],
       ["Claude 3.5 Sonnet", "claude-3-5-sonnet-20240620"],
       ["Claude 3.5 Sonnet", "claude-3-5-sonnet-20241022"],
-      ["Claude 3.7 Sonnet", "claude-3-7-sonnet-20250219"]
+      ["Claude 3.7 Sonnet", "claude-3-7-sonnet-20250219"],
+      ["Gemini 1.5 Pro", "gemini-1.5-pro-002"],
+      ["Gemini 2.5 Pro", "gemini-2.5-pro-preview-03-25"]
     ].map do |(assistant_name, language_model_api_name)|
       language_model = person.user.language_models.find_by_api_name(language_model_api_name)
       person.user.assistants.create!(
