@@ -64,7 +64,7 @@ class SoomoLaunchesController < ApplicationController
       ["Claude 3.5 Sonnet", "claude-3-5-sonnet-20241022"],
       ["Claude 3.7 Sonnet", "claude-3-7-sonnet-20250219"],
       ["Gemini 1.5 Pro", "gemini-1.5-pro-002"],
-      ["Gemini 2.5 Pro", "gemini-2.5-pro-preview-03-25"]
+      ["Gemini 2.5 Pro", "gemini-2.5-pro-preview-05-06"]
     ].map do |(assistant_name, language_model_api_name)|
       language_model = person.user.language_models.find_by_api_name(language_model_api_name)
       person.user.assistants.create!(
