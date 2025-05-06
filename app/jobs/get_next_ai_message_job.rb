@@ -79,6 +79,7 @@ class GetNextAIMessageJob < ApplicationJob
     wrap_up_the_message
     return true
   rescue Gemini::Errors::ConfigurationError => e
+    Rails.logger.error(e.class.name + ': ' + e.message)
     set_generic_error("Gemini")
     wrap_up_the_message
     return true
