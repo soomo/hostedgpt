@@ -348,6 +348,15 @@ models:
   supports_tools: false
   input_token_cost_cents: '0.00125'
   output_token_cost_cents: '0.01'
+  best: false
+  supports_system_message: true
+  api_service_name: Google Gemini
+- api_name: gemini-2.0-flash
+  name: Gemini 2.0 Flash
+  supports_images: true
+  supports_tools: false
+  input_token_cost_cents: '0.0001'
+  output_token_cost_cents: '0.0004'
   best: true
   supports_system_message: true
   api_service_name: Google Gemini
