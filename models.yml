@@ -9,6 +9,15 @@ models:
   best: true
   supports_system_message: true
   api_service_name: OpenAI
+- api_name: claude-sonnet-4-20250514
+  name: Claude Sonnet 4
+  supports_images: true
+  supports_tools: true
+  input_token_cost_cents: '0.0003'
+  output_token_cost_cents: '0.0015'
+  best: false
+  supports_system_message: true
+  api_service_name: Anthropic
 - api_name: claude-3-7-sonnet-20250219
   name: Claude 3.7 Sonnet (latest)
   supports_images: true
