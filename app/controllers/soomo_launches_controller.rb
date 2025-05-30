@@ -63,6 +63,7 @@ class SoomoLaunchesController < ApplicationController
       ["Claude 3.5 Sonnet", "claude-3-5-sonnet-20240620"],
       ["Claude 3.5 Sonnet", "claude-3-5-sonnet-20241022"],
       ["Claude 3.7 Sonnet", "claude-3-7-sonnet-20250219"],
+      ["Claude 4.0 Sonnet", "claude-sonnet-4-20250514"],
       ["Gemini 2.0 Flash", "gemini-2.0-flash"]
     ].map do |(assistant_name, language_model_api_name)|
       language_model = person.user.language_models.find_by_api_name(language_model_api_name)
